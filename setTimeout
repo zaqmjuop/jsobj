@@ -1,0 +1,73 @@
+import asyncio
+import nest_asyncio
+nest_asyncio.apply()
+
+# 创建一个协程任务
+async def createCoroutineByFunc(func, mesc):
+    await asyncio.sleep(mesc/1000)
+    func()
+    return # <coroutine object createCoroutineByFunc at 0x7f206449d1c0>
+
+def setTimeout(func, mesc):
+    task = asyncio.create_task(createCoroutineByFunc(func, mesc))
+    return task # <Task finished name='Task-2' coro=<createCoroutineByFunc() done, defined at /tmp/ipykernel_41058/980252688.py:6> result=None>
+
+def clearTimeout(task):
+    task.cancel()
+    print('clearTimeout', task)
+    return task
+
+def setInterval(func, mesc):
+    taskList = []
+    def interval():
+        nonlocal taskList
+        task = asyncio.create_task(createCoroutineByFunc(lambda: (
+            interval(),
+            func()
+        ), mesc))
+        taskList.append(task)
+        if(len(taskList) > 2):
+            del taskList[0]
+
+    def cancel():
+        for task in taskList:
+            task and task.cancel()
+        taskList.clear()
+            
+    interval()
+    return {
+        "cancel": cancel
+    } # {'cancel': <function __main__.setInterval.<locals>.cancel()>}
+
+def clearInterval(task):
+    task and task["cancel"]()
+    print('clearInterval', task)
+    return task
+
+
+count = 0
+
+def increateCount():
+    global count
+    count+= 1
+
+def printCount():
+    global count
+    print(f"第一次测试setInterval, count:{count}")
+
+interval1 = setInterval(lambda: (
+    printCount(),
+    increateCount()
+), 1100)
+setTimeout(lambda: clearInterval(interval1), 9999)
+# <Task pending name='Task-13' coro=<createCoroutineByFunc() running at /tmp/ipykernel_99532/2540581196.py:6>>
+# 第一次测试setInterval, count:0
+# 第一次测试setInterval, count:1
+# 第一次测试setInterval, count:2
+# 第一次测试setInterval, count:3
+# 第一次测试setInterval, count:4
+# 第一次测试setInterval, count:5
+# 第一次测试setInterval, count:6
+# 第一次测试setInterval, count:7
+# 第一次测试setInterval, count:8
+# clearInterval {'cancel': <function setInterval.<locals>.cancel at 0x7fabc435daf0>}
