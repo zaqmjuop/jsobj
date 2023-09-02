@@ -1,0 +1,206 @@
+# JavaScript String 参考手册 https://www.w3school.com.cn/jsref/jsref_obj_string.asp
+
+# charAt()	返回指定位置处的字符。
+def charAt(text, index = 0):
+    return text[index]
+
+print(charAt('qwertyuiop', 2)) # e
+
+# charCodeAt()	返回指定位置处字符编码。
+def charCodeAt(text, index = 0):
+    return ord(text[index])
+
+print(charCodeAt('A')) # 65
+
+# codePointAt()	返回字符串中索引（位置）处的 Unicode 值。
+def codePointAt(text, index = 0):
+    return ord(text[index])
+
+print(len('𠮷')) # 1
+print(codePointAt('𠮷')) # 134071
+
+# concat()	返回两个或多个连接的字符串。
+def strConcat(str1, str2):
+    return str1 + str2
+
+print(strConcat('hel', 'lo')) # hello
+
+# endsWith()	返回字符串是否以指定值结尾。
+def strEndsWith(text, searchValue, length = None):
+    if(length == None):
+        length = len(text)
+    return text.endswith(searchValue, 0, length)
+
+# 前11个字符是否以world结尾
+print(strEndsWith("Hello world, welcome to the universe.", "world", 11)) # True 
+
+# fromCharCode()	将 Unicode 值作为字符返回。
+def fromCharCode(unicode):
+    return chr(unicode)
+
+print(fromCharCode(65)) # A
+print(fromCharCode(134071)) # 𠮷
+print(fromCharCode(20013)) # 中
+
+# includes()	返回字符串是否包含指定值。
+def strIncludes(text, searchvalue, start = 0):
+    resIndex = text.find(searchvalue, start)
+    return resIndex != -1
+
+print(strIncludes("Hello world, welcome to the universe.", "world", 12)) # False
+print(strIncludes("Hello world, welcome to the universe.", "world", 1)) # True
+
+# indexOf()	返回值在字符串中第一次出现的位置。
+def strIndexOf(text, searchvalue, start = 0):
+    resIndex = text.find(searchvalue, start)
+    return resIndex
+
+print(strIndexOf("Hello world, welcome to the universe.", "world", 12)) # -1
+print(strIndexOf("Hello world, welcome to the universe.", "world", 1)) # 6
+
+# lastIndexOf()	返回值在字符串中最后一次出现的位置。
+def lastIndexOf(text, searchvalue, end = None):
+    if(end == None):
+        end = len(text)
+    return text.rfind(searchvalue, 0, end)
+
+print(lastIndexOf("Hello planet earth, you are a great planet.", 'planet')) # 36
+print(lastIndexOf("Hello planet earth, you are a great planet.", 'planet', 20)) # 6
+
+# length	返回字符串中的字符数。
+def strLength(text):
+    return len(text)
+
+print(strLength('hell')) # 4
+
+# match()	在字符串中搜索值或正则表达式，并返回匹配项。
+import re
+def strMatch(text, regexp):
+    searchRes = re.search(regexp, text)
+    res = {
+        "0": searchRes.group(),
+        "index": searchRes.span()[0],
+        "input": text,
+        "groups": searchRes.groups() if len(searchRes.groups()) > 0 else None
+    } if searchRes else searchRes
+    return res
+
+print(strMatch('www.w3cschool.cn','qq')) # None
+print(strMatch('www.w3cschool.cn','3cschoo')) # {'0': '3cschoo', 'index': 5, 'input': 'www.w3cschool.cn', 'groups': None}
+print(strMatch('www.w3cschool.cn','3(c)sc(h)oo')) # {'0': '3cschoo', 'index': 5, 'input': 'www.w3cschool.cn', 'groups': ('c', 'h')}
+
+# repeat()	返回拥有多个字符串副本的新字符串。
+def strRepeat(text, count = 1):
+    res = ''
+    for i in range(0, count): # for (let i = 0; i < count; i++)
+        res += text
+    return res
+
+print(strRepeat('hell', 0)) # ''
+print(strRepeat('hell')) # hell
+print(strRepeat('hell', 2)) # hellhell
+print(strRepeat('hell', 3)) # hellhellhell
+
+# replace()	在字符串中搜索值或正则表达式，并返回替换值的字符串。
+def strReplace(text, regexp, replacement, maxTimes = None):
+    return text.replace(regexp, replacement, maxTimes) if isinstance(maxTimes, int) else text.replace(regexp, replacement)
+
+print(strReplace("Blue blue blue", r'blue', 'green')) # Blue green green
+print(strReplace("Blue blue blue", r'blue', 'green', 0)) # Blue blue blue
+print(strReplace("Blue blue blue", r'blue', 'green', 1)) # Blue green blue
+
+# search()	检索字符串中与正则表达式匹配的子串。
+import re
+def strSearch(text, regexp):
+    searchRes = re.search(regexp, text)
+    return searchRes.span()[0] if searchRes else -1
+
+print(strSearch("Mr. Blue has a blue house", 'Blue')) # 4
+print(strSearch("Mr. Blue has a blue house", 'blue')) # 15
+print(strSearch("Mr. Blue has a blue house", r'has')) # 9
+
+# slice()	提取字符串的一部分并返回新字符串。
+def strSlice(text, start, end = None):
+    if(end == None):
+        end = len(text)
+    return text[start:end]
+
+print(strSlice("Hello world!", 0, 5)) # Hello
+print(strSlice("Hello world!", 1)) # ello world!
+print(strSlice("Hello world!", -1)) # !
+
+# split()	将字符串拆分为子字符串数组。
+def strSplit(text, separator = '', limit = None):
+    if(separator == None):
+        return [text]
+    if(separator == ''):
+        return list(text[0: limit]) + [text[limit:]] if isinstance(limit, int) else list(text)
+    else:
+        return text.split(separator, limit) if isinstance(limit, int) else text.split(separator)
+
+print(strSplit("How are you doing today?", ' ')) # ['How', 'are', 'you', 'doing', 'today?']
+print(strSplit("How are you doing today?", ' ', 1)) # ['How', 'are you doing today?']
+print(strSplit("How are you doing today?", ' ', 2)) # ['How', 'are', 'you doing today?'] 
+print(strSplit("How are you doing today?", '')) # ['H', 'o', 'w', ' ', 'a', 'r', 'e', ' ', 'y', 'o', 'u', ' ', 'd', 'o', 'i', 'n', 'g', ' ', 't', 'o', 'd', 'a', 'y', '?']
+print(strSplit("How are you doing today?", '', 1)) # ['H', 'ow are you doing today?']
+print(strSplit("How are you doing today?", '', 2)) # ['H', 'o', 'w are you doing today?']
+
+# startsWith()	检查字符串是否以指定字符开头。
+def startsWith(text, searchValue, start = 0):
+    return text.startswith(searchValue, start)
+
+
+print(startsWith("Hello world, welcome to the universe.", "world", 6)) # True
+print(startsWith("Hello world, welcome to the universe.", "world", 1)) # False
+print(startsWith("Hello world, welcome to the universe.", "Hell")) # True
+
+# substr()	从字符串中抽取子串，该方法是 substring() 的变种。
+def substr(text, start, length):
+    start = start if start >= 0 else start + len(text)
+    return text[start:start + length]
+
+print(substr("Hello world!", 1, 4)) # ello
+print(substr("Hello world!", 1, 3)) # ell
+print(substr("Hello world!", -5, 4)) # orld
+
+# substring()	从字符串中抽取子串。
+def substring(text, start, end = None):
+    end = end if end != None else len(text)
+    end = end if end >= 0 else end + len(text)
+    start = start if start >= 0 else start + len(text)
+    return text[start:end]
+
+print(substring("Hello world!", 6)) # world!
+print(substring("Hello world!", 6, 9)) # wor
+print(substring("Hello world!", -5, -3)) # or
+print(substring("Hello world!", -5, 9)) # or
+
+# toLowerCase()	返回转换为小写字母的字符串。
+def toLowerCase(text):
+    return text.lower()
+
+print(toLowerCase('我不叫Wiz 我叫Khalifa')) # 我不叫wiz 我叫khalifa
+
+# toUpperCase()	返回转换为大写字母的字符串。
+def toUpperCase(text):
+    return text.upper()
+
+print(toUpperCase('我不叫Wiz 我叫Khalifa')) # 我不叫WIZ 我叫KHALIFA
+
+# trim()	返回删除了空格的字符串。
+def trim(text):
+    return text.lstrip().rstrip()
+
+print(trim('   我不叫Wiz 我叫Khalifa  ')) # 我不叫Wiz 我叫Khalifa
+
+# trimEnd()	返回从末尾删除空格的字符串。
+def trimEnd(text):
+    return text.rstrip()
+
+print(trimEnd('   我不叫Wiz 我叫Khalifa  ')) #    我不叫Wiz 我叫Khalifa
+
+# trimStart()	返回从开头删除空格的字符串。
+def trimStart(text):
+    return text.lstrip()
+
+print(trimStart('   我不叫Wiz 我叫Khalifa  ')) # 我不叫Wiz 我叫Khalifa 
